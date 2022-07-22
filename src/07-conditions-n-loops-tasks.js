@@ -221,8 +221,15 @@ function findFirstSingleChar(str) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  let baseInterval = '';
+  baseInterval = a < b
+    ? `${a}, ${b}`
+    : `${b}, ${a}`;
+
+  const baseInterval0 = isStartIncluded ? '[' : '(';
+  const baseIntervalEnd = isEndIncluded ? ']' : ')';
+  return `${baseInterval0}${baseInterval}${baseIntervalEnd}`;
 }
 
 /**
@@ -374,8 +381,8 @@ function isBracketsBalanced(str) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return num.toString(n);
 }
 
 /**
@@ -390,8 +397,21 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  let general = '';
+  const i = 1;
+
+  while (i) {
+    const regExp = new RegExp(`^${general}[a-z0-9_]*/`, 'i');
+    const search = regExp.exec(pathes[0]);
+    const result = pathes.filter((item) => item.indexOf(search) === 0);
+    if (result.length === pathes.length) {
+      general = search;
+    } else {
+      break;
+    }
+  }
+  return general;
 }
 
 /**
@@ -412,8 +432,21 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const result = [];
+
+  for (let i = 0; i < m1.length; i += 1) {
+    const resultRow = [];
+    for (let j = 0; j < m2[0].length; j += 1) {
+      let product = 0;
+      for (let k = 0; k < m2.length; k += 1) {
+        product += m1[i][k] * m2[k][j];
+      }
+      resultRow.push(product);
+    }
+    result.push(resultRow);
+  }
+  return result;
 }
 
 /**
