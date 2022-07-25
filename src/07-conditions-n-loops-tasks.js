@@ -479,9 +479,60 @@ function getMatrixProduct(m1, m2) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  const leftDiag = position[0][0];
+  const rightDiag = position[0][2];
+
+  if (leftDiag) {
+    for (let i = 0; i < position.length; i += 1) {
+      if (position[i][i] !== leftDiag) {
+        break;
+      }
+      if (i === 2 && position[i][i] === leftDiag) {
+        return leftDiag;
+      }
+    }
+  }
+  if (rightDiag) {
+    for (let i = 0; i < position.length; i += 1) {
+      if (position[i][2 - i] !== rightDiag) {
+        break;
+      }
+      if (i === 2 && position[i][2 - i] === rightDiag) {
+        return rightDiag;
+      }
+    }
+  }
+
+  for (let i = 0; i < position.length; i += 1) {
+    const horizn = position[0][i];
+
+    if (horizn) {
+      for (let j = 1; j < position.length; j += 1) {
+        if (position[j][i] !== horizn) {
+          break;
+        }
+        if (j === 2 && position[j][i] === horizn) {
+          return horizn;
+        }
+      }
+    }
+    const vertical = position[i][0];
+    if (vertical) {
+      for (let j = 1; j < position.length; j += 1) {
+        if (position[i][j] !== vertical) {
+          break;
+        }
+        if (j === 2 && position[i][j] === vertical) {
+          return vertical;
+        }
+      }
+    }
+  }
+
+  return undefined;
 }
+
 
 module.exports = {
   getFizzBuzz,

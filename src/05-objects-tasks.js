@@ -114,32 +114,80 @@ function fromJSON(proto, json) {
  */
 
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  result: '',
+  position: 0,
+
+  checkError(position) {
+    if (this.position > position) {
+      throw new Error(
+        'Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element',
+      );
+    }
+    if (
+      this.position === position
+      && (position === 1 || position === 2 || position === 6)
+    ) {
+      throw new Error(
+        'Element, id and pseudo-element should not occur more then one time inside the selector',
+      );
+    }
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  element(value) {
+    this.checkError(1);
+    const elementBuilder = Object.create(cssSelectorBuilder);
+    elementBuilder.position = 1;
+    elementBuilder.result = `${this.result}${value}`;
+    return elementBuilder;
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  id(value) {
+    this.checkError(2);
+    const idBuilder = Object.create(cssSelectorBuilder);
+    idBuilder.position = 2;
+    idBuilder.result = `${this.result}#${value}`;
+    return idBuilder;
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    this.checkError(3);
+    const classBuilder = Object.create(cssSelectorBuilder);
+    classBuilder.position = 3;
+    classBuilder.result = `${this.result}.${value}`;
+    return classBuilder;
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    this.checkError(4);
+    const attrBuilder = Object.create(cssSelectorBuilder);
+    attrBuilder.position = 4;
+    attrBuilder.result = `${this.result}[${value}]`;
+    return attrBuilder;
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    this.checkError(5);
+    const psClassBuilder = Object.create(cssSelectorBuilder);
+    psClassBuilder.position = 5;
+    psClassBuilder.result = `${this.result}:${value}`;
+    return psClassBuilder;
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  pseudoElement(value) {
+    this.checkError(6);
+    const psElemBuilder = Object.create(cssSelectorBuilder);
+    psElemBuilder.position = 6;
+    psElemBuilder.result = `${this.result}::${value}`;
+    return psElemBuilder;
+  },
+
+  combine(selector1, combinator, selector2) {
+    const combineObj = Object.create(cssSelectorBuilder);
+    combineObj.result = `${selector1.result} ${combinator} ${selector2.result}`;
+    return combineObj;
+  },
+  stringify() {
+    return this.result;
   },
 };
 
